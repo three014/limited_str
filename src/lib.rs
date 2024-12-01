@@ -32,6 +32,14 @@ impl<const MAX_LENGTH: usize> LimitedStr<MAX_LENGTH> {
     }
 }
 
+impl<'a: 'b, 'b, const MAX_LENGTH: usize> TryFrom<&'a str> for &'b LimitedStr<MAX_LENGTH> {
+    type Error = &'static str;
+
+    fn try_from(value: &'a str) -> Result<Self, Self::Error> {
+        LimitedStr::from_str(value).ok_or("str length was greater than MAX_LENGTH")
+    }
+}
+
 impl<const MAX_LENGTH: usize> Deref for LimitedStr<MAX_LENGTH> {
     type Target = str;
 
