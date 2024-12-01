@@ -1,4 +1,4 @@
-use std::borrow::Borrow;
+use std::{borrow::Borrow, ops::Deref};
 
 #[cfg(feature = "serde")]
 use serde::{de, Deserialize, Serialize};
@@ -29,6 +29,14 @@ impl<const MAX_LENGTH: usize> LimitedStr<MAX_LENGTH> {
             limited_str: &'a LimitedStr<MAX_LENGTH>,
         }
         unsafe { StrRepr::<MAX_LENGTH> { normal_str: s }.limited_str }
+    }
+}
+
+impl<const MAX_LENGTH: usize> Deref for LimitedStr<MAX_LENGTH> {
+    type Target = str;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
     }
 }
 
